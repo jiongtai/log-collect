@@ -1,0 +1,13 @@
+kafka:
+  address: localhost:9092
+  topic:
+  chanMaxSize: 100000
+
+etcd:
+  address: localhost:2379
+  timeout: 5
+
+es:
+  address: localhost:9200
+  size: 100000
+  worker: 10
