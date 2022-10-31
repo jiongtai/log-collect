@@ -3,11 +3,19 @@ package test
 import (
 	"fmt"
 	"github.com/hpcloud/tail"
+	"os"
 	"testing"
 	"time"
 )
 
 func TestTail(t *testing.T) {
+
+	testMap := make(map[int]int, 5)
+	testMap[1] = 1 + 1
+	testMap[1+1] = 2
+	fmt.Println(testMap)
+	os.Exit(1)
+
 	filename := "./test.log"
 	cfg := tail.Config{
 		ReOpen:    true,
