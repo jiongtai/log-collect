@@ -5,13 +5,14 @@ import (
 )
 
 type Config struct {
-	Kafka `yaml:"kafka"`
-	Es    `yaml:"es"`
+	Kafka       `yaml:"kafka"`
+	Es          `yaml:"es"`
+	LogFilePath `yaml:"logFile"`
 }
 
 type Kafka struct {
-	Address     string `yaml:"address"`
-	ChanMaxSize int    `yaml:"chanMaxSize"`
+	Address     []string `yaml:"address"`
+	ChanMaxSize int      `yaml:"chanMaxSize"`
 }
 
 type Es struct {
@@ -20,11 +21,14 @@ type Es struct {
 	Worker  int    `yaml:"worker"`
 }
 
+type LogFilePath []string
+
 func NewConfig() (*Config, error) {
 	cfg := &Config{}
 	var configViperConfig = viper.New()
 	configViperConfig.SetConfigName("config")
 	configViperConfig.SetConfigType("yaml")
+	// todo：路径问题待解决，能否换成绝对路径？build的时候当前路径会变成cmd/app/agent。。
 	configViperConfig.AddConfigPath("./config")
 	if err := configViperConfig.ReadInConfig(); err != nil {
 		return nil, err

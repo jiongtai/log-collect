@@ -42,3 +42,11 @@ func TestTail(t *testing.T) {
 		fmt.Println("line:", line.Text)
 	}
 }
+
+func TestFor(t *testing.T) {
+	for true {
+		for i := 0; i < 2; i++ {
+			fmt.Println(i)
+		}
+	}
+}
