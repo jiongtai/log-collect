@@ -7,7 +7,7 @@ import (
 type Config struct {
 	Kafka       `yaml:"kafka"`
 	Es          `yaml:"es"`
-	LogFilePath `yaml:"logFile"`
+	LogFilePath string `yaml:"logFile"`
 }
 
 type Kafka struct {
@@ -20,8 +20,6 @@ type Es struct {
 	Size    int    `yaml:"size"`
 	Worker  int    `yaml:"worker"`
 }
-
-type LogFilePath []string
 
 func NewConfig() (*Config, error) {
 	cfg := &Config{}

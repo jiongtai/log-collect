@@ -14,7 +14,4 @@ es:
   worker: 10
 
 logfilePath:
-  - /Users/tysonhu/GolandProjects/log-collect/test/log-1.log
-  - /Users/tysonhu/GolandProjects/log-collect/test/log-2.log
-#  - /var/www/erp.yms/storage/logs/access.log
-#  - /var/www/erp.yms/storage/logs/error.log
+  /Users/tysonhu/GolandProjects/log-collect/test/log-1.log

@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	TaskSlice []*tail.Tail
+	taskObj *tail.Tail
 )
 
-func Init(cfg *config.Config) error {
+func Init(cfg *config.Config) (err error) {
 	tailCfg := tail.Config{
 		ReOpen:    true,
 		Follow:    true,
@@ -21,13 +21,10 @@ func Init(cfg *config.Config) error {
 		MustExist: false,
 		Poll:      true,
 	}
-	for _, filename := range cfg.LogFilePath {
-		TaskObj, err := tail.TailFile(filename, tailCfg)
-		if err != nil {
-			fmt.Println("init tailFile OBJ failed: " + filename)
-			return err
-		}
-		TaskSlice = append(TaskSlice, TaskObj)
+	taskObj, err = tail.TailFile(cfg.LogFilePath, tailCfg)
+	if err != nil {
+		fmt.Println("init tailFile OBJ failed: " + cfg.LogFilePath)
+		return err
 	}
 	return nil
 }
@@ -38,21 +35,18 @@ func Run() (err error) {
 		ok   bool
 	)
 	for {
-		// 轮询tail对象切片
-		for _, tails := range TaskSlice {
-			// 开始读取数据
-			line, ok = <-tails.Lines
-			if !ok {
-				fmt.Printf("tail file close reopen, filename:%s\n", tails.Filename)
-				time.Sleep(time.Second)
-				continue
-			}
-			// 组装msg
-			msg := &sarama.ProducerMessage{}
-			msg.Topic = "scm"
-			msg.Value = sarama.StringEncoder(line.Text)
-			// 将msg丢到Kafka中的channel，在Kafka那边读取channel中的数据，再发往Kafka
-			kafka.MsgChan <- msg
+		// 开始读取数据
+		line, ok = <-taskObj.Lines
+		if !ok {
+			fmt.Printf("tail file close reopen, filename:%s\n", taskObj.Filename)
+			time.Sleep(time.Second)
+			continue
 		}
+		// 组装msg
+		msg := &sarama.ProducerMessage{}
+		msg.Topic = "scm"
+		msg.Value = sarama.StringEncoder(line.Text)
+		// 将msg丢到Kafka中的channel，在Kafka那边读取channel中的数据，再发往Kafka
+		kafka.MsgChan <- msg
 	}
 }
