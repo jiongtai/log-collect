@@ -4,10 +4,14 @@ import (
 	"fmt"
 	"go.etcd.io/etcd/clientv3"
 	"golang.org/x/net/context"
-	"strconv"
 	"testing"
 	"time"
 )
+
+type logInfo struct {
+	Path  string `json:"path"`
+	Topic string `json:"topic"`
+}
 
 func TestEtcd(t *testing.T) {
 	client, err := clientv3.New(clientv3.Config{
@@ -19,14 +23,14 @@ func TestEtcd(t *testing.T) {
 	}
 	defer client.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	putResponse, err := client.Put(ctx, "age", strconv.Itoa(25))
+	putResponse, err := client.Put(ctx, "logPath", `[{"path": "/Users/tysonhu/GolandProjects/log-collect/test/log-1.log", "topic": "scm"},{"path": "/Users/tysonhu/GolandProjects/log-collect/test/log-2.log", "topic": "ad"}]`)
 	cancel()
 	if err != nil {
 		return
 	}
 	fmt.Println(putResponse)
 	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
-	getResponse, err := client.Get(ctx, "age")
+	getResponse, err := client.Get(ctx, "logPath")
 	if err != nil {
 		return
 	}

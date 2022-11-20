@@ -2,12 +2,14 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"time"
 )
 
 type Config struct {
 	Kafka       `yaml:"kafka"`
 	Es          `yaml:"es"`
 	LogFilePath string `yaml:"logFile"`
+	Etcd        `yaml:"etcd"`
 }
 
 type Kafka struct {
@@ -19,6 +21,12 @@ type Es struct {
 	Address string `yaml:"address"`
 	Size    int    `yaml:"size"`
 	Worker  int    `yaml:"worker"`
+}
+
+type Etcd struct {
+	Address       string        `yaml:"address"`
+	Timeout       time.Duration `yaml:"timeout"`
+	LogCollectKey string        `yaml:"logCollectKey"`
 }
 
 func NewConfig() (*Config, error) {

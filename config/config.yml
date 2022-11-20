@@ -6,7 +6,8 @@ kafka:
 
 etcd:
   address: localhost:2379
-  timeout: 5
+  timeout: 10
+  logCollectKey: logPath
 
 es:
   address: localhost:9200
